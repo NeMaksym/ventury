@@ -54,8 +54,9 @@ interface EditableListProps {
   label: string
   items: IListItem[]
   onItemAdd: (inputValue: string, setInputValue: InputWithPropsSetValue) => void
-  onItemDelete: (id: IListItem['id']) => void
-  onItemEdit: (id: IListItem['id'], inputValue: string) => void
+  onItemDelete: () => void
+  onItemEdit: (inputValue: string) => void
+  selectedId: string
   onItemSelect: (id: IListItem['id']) => void
 }
 
@@ -65,13 +66,11 @@ export function EditableList({
   onItemAdd,
   onItemDelete,
   onItemEdit,
+  selectedId,
   onItemSelect,
 }: EditableListProps) {
-  const [selectedItem, setSelectedItem] = useState('')
-  const isSelected = (id: IListItem['id']) => id === selectedItem
-
   const [isEditMode, setIsEditMode] = useState(false)
-  const idEditable = (id: IListItem['id']) => isSelected(id) && isEditMode
+  const idEditable = (id: IListItem['id']) => id === selectedId && isEditMode
 
   return (
     <ListStyled
@@ -86,19 +85,16 @@ export function EditableList({
             {label}
             <Stack direction="row" spacing={1}>
               <IconButtonStyled
-                disabled={!selectedItem || isEditMode}
+                disabled={!selectedId || isEditMode}
                 size="small"
                 onClick={() => setIsEditMode(true)}
               >
                 <EditIcon />
               </IconButtonStyled>
               <IconButtonStyled
-                disabled={!selectedItem}
+                disabled={!selectedId}
                 size="small"
-                onClick={() => {
-                  onItemDelete(selectedItem)
-                  setSelectedItem('')
-                }}
+                onClick={onItemDelete}
               >
                 <DeleteIcon />
               </IconButtonStyled>
@@ -112,15 +108,14 @@ export function EditableList({
         {items.map(({ id, label }) => (
           <ListItemButton
             key={id}
-            onClick={() => {
-              setIsEditMode(false)
-              setSelectedItem(id)
-              onItemSelect(id)
-            }}
-            selected={isSelected(id)}
+            onClick={() => onItemSelect(id)}
+            selected={id === selectedId}
           >
             {idEditable(id) ? (
-              <ClickAwayListener onClickAway={() => setIsEditMode(false)}>
+              <ClickAwayListener
+                mouseEvent="onMouseUp"
+                onClickAway={() => setIsEditMode(false)}
+              >
                 <TextField
                   value={label}
                   size="small"
@@ -131,7 +126,7 @@ export function EditableList({
                     sx: { py: '4px', height: '1.5em' },
                   }}
                   inputRef={(input) => input && input.focus()}
-                  onChange={(event) => onItemEdit(id, event.target.value)}
+                  onChange={(event) => onItemEdit(event.target.value)}
                 />
               </ClickAwayListener>
             ) : (

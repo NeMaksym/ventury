@@ -29,9 +29,9 @@ const mockData: Group[] = [1, 2, 3, 4, 5].map((i) => {
 
 export function CategoryManager() {
   const [groups, setGroups] = useState(mockData)
-  const [selectedGroupId, setSelectedGroupId] = useState('')
-  const categories =
-    groups.find((group) => group.id === selectedGroupId)?.categories || []
+
+  const [groupId, setGroupId] = useState(groups[0]?.id || '')
+  const [categoryId, setCategoryId] = useState('')
 
   const handleGroupAdd = (inputValue: string, setInputValue: any) => {
     const newGroup: Group = {
@@ -43,26 +43,24 @@ export function CategoryManager() {
     setInputValue('')
   }
 
-  const handleGroupDelete = (id: string) => {
-    const updatedGroups = groups.filter((group) => group.id !== id)
+  const handleGroupDelete = () => {
+    const updatedGroups = groups.filter((group) => group.id !== groupId)
     setGroups(updatedGroups)
   }
 
-  const handleGroupEdit = (id: string, inputValue: string) => {
+  const handleGroupEdit = (inputValue: string) => {
     const updatedGroups = groups.map((group) =>
-      group.id === id ? { ...group, label: inputValue } : group
+      group.id === groupId ? { ...group, label: inputValue } : group
     )
     setGroups(updatedGroups)
   }
 
-  const handleGroupSelect = (id: string) => {
-    setSelectedGroupId(id)
-  }
+  const handleGroupSelect = (id: string) => setGroupId(id)
 
   const handleCategoryAdd = (inputValue: string, setInputValue: any) => {
     const newCategory = { id: crypto.randomUUID(), label: inputValue }
     const updatedGroups = groups.map((group) => {
-      return group.id === selectedGroupId
+      return group.id === groupId
         ? { ...group, categories: [...group.categories, newCategory] }
         : group
     })
@@ -70,25 +68,25 @@ export function CategoryManager() {
     setInputValue('')
   }
 
-  const handleCategoryDelete = (id: string) => {
+  const handleCategoryDelete = () => {
     const updatedGroups = groups.map((group) => {
-      return group.id === selectedGroupId
+      return group.id === groupId
         ? {
             ...group,
-            categories: group.categories.filter((cat) => cat.id !== id),
+            categories: group.categories.filter((cat) => cat.id !== categoryId),
           }
         : group
     })
     setGroups(updatedGroups)
   }
 
-  const handleCategoryEdit = (id: string, inputValue: string) => {
+  const handleCategoryEdit = (inputValue: string) => {
     const updatedGroups = groups.map((group) => {
-      return group.id === selectedGroupId
+      return group.id === groupId
         ? {
             ...group,
             categories: group.categories.map((cat) =>
-              cat.id === id ? { ...cat, label: inputValue } : cat
+              cat.id === categoryId ? { ...cat, label: inputValue } : cat
             ),
           }
         : group
@@ -96,23 +94,27 @@ export function CategoryManager() {
     setGroups(updatedGroups)
   }
 
+  const handleCategorySelect = (id: string) => setCategoryId(id)
+
   return (
     <Stack direction="row" spacing={2}>
       <EditableList
         label="Groups"
         items={groups}
+        selectedId={groupId}
+        onItemSelect={handleGroupSelect}
         onItemAdd={handleGroupAdd}
         onItemDelete={handleGroupDelete}
         onItemEdit={handleGroupEdit}
-        onItemSelect={handleGroupSelect}
       />
       <EditableList
         label="Categories"
-        items={categories}
+        items={groups.find((group) => group.id === groupId)?.categories || []}
+        selectedId={categoryId}
+        onItemSelect={handleCategorySelect}
         onItemAdd={handleCategoryAdd}
         onItemDelete={handleCategoryDelete}
         onItemEdit={handleCategoryEdit}
-        onItemSelect={() => {}}
       />
     </Stack>
   )
