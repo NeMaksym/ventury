@@ -115,6 +115,7 @@ export function CategoryManager() {
         onItemAdd={handleCategoryAdd}
         onItemDelete={handleCategoryDelete}
         onItemEdit={handleCategoryEdit}
+        addDisabled={!groupId}
       />
     </Stack>
   )

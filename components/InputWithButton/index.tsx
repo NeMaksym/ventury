@@ -19,6 +19,7 @@ interface InputWithButtonProps {
   fullWidth?: boolean
   sx?: SxProps<Theme>
   size?: 'small' | 'medium'
+  disabled?: boolean
 }
 
 export function InputWithButton({
@@ -29,6 +30,7 @@ export function InputWithButton({
   label,
   sx,
   size,
+  disabled,
 }: InputWithButtonProps) {
   const INPUT_ID = crypto.randomUUID()
   const [value, setValue] = useState(initialValue ?? '')
@@ -40,7 +42,12 @@ export function InputWithButton({
   const handleMainAction = () => onClick(value, setValue)
 
   return (
-    <FormControl sx={sx} fullWidth={fullWidth} variant="outlined">
+    <FormControl
+      sx={sx}
+      fullWidth={fullWidth}
+      variant="outlined"
+      disabled={disabled}
+    >
       {label && <InputLabel htmlFor={INPUT_ID}>{label}</InputLabel>}
       <OutlinedInput
         size={size}
@@ -49,7 +56,11 @@ export function InputWithButton({
         value={value}
         onChange={captureValue}
         label={label}
-        endAdornment={<Button onClick={handleMainAction}>{btnText}</Button>}
+        endAdornment={
+          <Button onClick={handleMainAction} disabled={disabled}>
+            {btnText}
+          </Button>
+        }
       />
     </FormControl>
   )

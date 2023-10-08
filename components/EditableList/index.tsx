@@ -58,6 +58,7 @@ interface EditableListProps {
   onItemEdit: (inputValue: string) => void
   selectedId: string
   onItemSelect: (id: IListItem['id']) => void
+  addDisabled?: boolean
 }
 
 export function EditableList({
@@ -68,6 +69,7 @@ export function EditableList({
   onItemEdit,
   selectedId,
   onItemSelect,
+  addDisabled,
 }: EditableListProps) {
   const [isEditMode, setIsEditMode] = useState(false)
   const idEditable = (id: IListItem['id']) => id === selectedId && isEditMode
@@ -142,6 +144,7 @@ export function EditableList({
           size="small"
           btnText="Add"
           onClick={onItemAdd}
+          disabled={addDisabled}
         />
       </ListItem>
     </ListStyled>
