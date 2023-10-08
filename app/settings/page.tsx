@@ -1,5 +1,5 @@
 import { Unstable_Grid2 as Grid, Paper } from '@mui/material'
-import { MonoTokenInput } from '@/components'
+import { MonoTokenInput, CategoryManager } from '@/components'
 
 export default function Home() {
   return (
@@ -7,6 +7,9 @@ export default function Home() {
       <Grid container spacing={4}>
         <Grid xs={12}>
           <MonoTokenInput />
+        </Grid>
+        <Grid xs={12}>
+          <CategoryManager />
         </Grid>
       </Grid>
     </Paper>
