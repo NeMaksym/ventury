@@ -41,6 +41,7 @@ export function CategoryManager() {
     }
     setGroups([...groups, newGroup])
     setInputValue('')
+    setGroupId(newGroup.id)
   }
 
   const handleGroupDelete = () => {
