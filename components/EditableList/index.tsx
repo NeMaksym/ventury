@@ -14,6 +14,8 @@ import {
   TextField,
   Stack,
   IconButtonProps,
+  Box,
+  BoxProps,
 } from '@mui/material'
 import { ClickAwayListener } from '@mui/base'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -21,7 +23,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { InputWithButton, type InputWithPropsSetValue } from '@/components'
 
 const ListStyled = styled(List)<ListProps>(({ theme }) => ({
-  maxWidth: '300px',
+  maxWidth: '350px',
   border: 'solid',
   borderRadius: '4px',
   borderColor: theme.palette.grey[300],
@@ -36,6 +38,11 @@ const ListSubheaderStyled = styled(ListSubheader)<ListSubheaderProps>(() => ({
 
 const IconButtonStyled = styled(IconButton)<IconButtonProps>(() => ({
   height: '34px',
+}))
+
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  height: '250px',
+  overflow: 'scroll',
 }))
 
 interface IListItem {
@@ -101,36 +108,38 @@ export function EditableList({
       }
     >
       <Divider />
-      {items.map(({ id, label }) => (
-        <ListItemButton
-          key={id}
-          onClick={() => {
-            setIsEditMode(false)
-            setSelectedItem(id)
-            onItemSelect(id)
-          }}
-          selected={isSelected(id)}
-        >
-          {idEditable(id) ? (
-            <ClickAwayListener onClickAway={() => setIsEditMode(false)}>
-              <TextField
-                value={label}
-                size="small"
-                variant="standard"
-                fullWidth
-                InputProps={{ disableUnderline: true }}
-                inputProps={{
-                  sx: { py: '4px', height: '1.5em' },
-                }}
-                inputRef={(input) => input && input.focus()}
-                onChange={(event) => onItemEdit(id, event.target.value)}
-              />
-            </ClickAwayListener>
-          ) : (
-            <ListItemText primary={label} />
-          )}
-        </ListItemButton>
-      ))}
+      <StyledBox>
+        {items.map(({ id, label }) => (
+          <ListItemButton
+            key={id}
+            onClick={() => {
+              setIsEditMode(false)
+              setSelectedItem(id)
+              onItemSelect(id)
+            }}
+            selected={isSelected(id)}
+          >
+            {idEditable(id) ? (
+              <ClickAwayListener onClickAway={() => setIsEditMode(false)}>
+                <TextField
+                  value={label}
+                  size="small"
+                  variant="standard"
+                  fullWidth
+                  InputProps={{ disableUnderline: true }}
+                  inputProps={{
+                    sx: { py: '4px', height: '1.5em' },
+                  }}
+                  inputRef={(input) => input && input.focus()}
+                  onChange={(event) => onItemEdit(id, event.target.value)}
+                />
+              </ClickAwayListener>
+            ) : (
+              <ListItemText primary={label} />
+            )}
+          </ListItemButton>
+        ))}
+      </StyledBox>
       <Divider />
       <ListItem>
         <InputWithButton
