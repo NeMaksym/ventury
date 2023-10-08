@@ -46,6 +46,7 @@ export function CategoryManager() {
   const handleGroupDelete = () => {
     const updatedGroups = groups.filter((group) => group.id !== groupId)
     setGroups(updatedGroups)
+    setGroupId(updatedGroups[0]?.id || '')
   }
 
   const handleGroupEdit = (inputValue: string) => {
