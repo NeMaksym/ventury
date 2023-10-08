@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { Stack } from '@mui/material'
 import { EditableList } from '@/components'
 
@@ -50,9 +50,11 @@ export function CategoryManager() {
     setGroupId(updatedGroups[0]?.id || '')
   }
 
-  const handleGroupEdit = (inputValue: string) => {
+  const handleGroupEdit = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const updatedGroups = groups.map((group) =>
-      group.id === groupId ? { ...group, label: inputValue } : group
+      group.id === groupId ? { ...group, label: e.target.value } : group
     )
     setGroups(updatedGroups)
   }
@@ -82,13 +84,15 @@ export function CategoryManager() {
     setGroups(updatedGroups)
   }
 
-  const handleCategoryEdit = (inputValue: string) => {
+  const handleCategoryEdit = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const updatedGroups = groups.map((group) => {
       return group.id === groupId
         ? {
             ...group,
             categories: group.categories.map((cat) =>
-              cat.id === categoryId ? { ...cat, label: inputValue } : cat
+              cat.id === categoryId ? { ...cat, label: e.target.value } : cat
             ),
           }
         : group
@@ -107,7 +111,7 @@ export function CategoryManager() {
         onItemSelect={handleGroupSelect}
         onItemAdd={handleGroupAdd}
         onItemDelete={handleGroupDelete}
-        onItemEdit={handleGroupEdit}
+        onItemChange={handleGroupEdit}
       />
       <EditableList
         label="Categories"
@@ -116,7 +120,7 @@ export function CategoryManager() {
         onItemSelect={handleCategorySelect}
         onItemAdd={handleCategoryAdd}
         onItemDelete={handleCategoryDelete}
-        onItemEdit={handleCategoryEdit}
+        onItemChange={handleCategoryEdit}
         addDisabled={!groupId}
       />
     </Stack>

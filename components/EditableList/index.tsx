@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { styled } from '@mui/material/styles'
 import {
   List,
@@ -55,7 +55,7 @@ interface EditableListProps {
   items: IListItem[]
   onItemAdd: (inputValue: string, setInputValue: InputWithPropsSetValue) => void
   onItemDelete: () => void
-  onItemEdit: (inputValue: string) => void
+  onItemChange: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void
   selectedId: string
   onItemSelect: (id: IListItem['id']) => void
   addDisabled?: boolean
@@ -66,7 +66,7 @@ export function EditableList({
   items,
   onItemAdd,
   onItemDelete,
-  onItemEdit,
+  onItemChange,
   selectedId,
   onItemSelect,
   addDisabled,
@@ -128,7 +128,7 @@ export function EditableList({
                     sx: { py: '4px', height: '1.5em' },
                   }}
                   inputRef={(input) => input && input.focus()}
-                  onChange={(event) => onItemEdit(event.target.value)}
+                  onChange={onItemChange}
                 />
               </ClickAwayListener>
             ) : (
