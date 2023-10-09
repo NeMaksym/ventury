@@ -1,5 +1,5 @@
 'use client'
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useCallback } from 'react'
 import { Stack } from '@mui/material'
 import { EditableList } from '@/components'
 
@@ -33,46 +33,53 @@ export function CategoryManager() {
   const [groupId, setGroupId] = useState(groups[0]?.id || '')
   const [categoryId, setCategoryId] = useState('')
 
-  const handleGroupAdd = (inputValue: string, setInputValue: any) => {
-    const newGroup: Group = {
-      id: crypto.randomUUID(),
-      label: inputValue,
-      categories: [],
-    }
-    setGroups([...groups, newGroup])
-    setInputValue('')
-    setGroupId(newGroup.id)
-  }
+  const handleGroupAdd = useCallback(
+    (inputValue: string, setInputValue: any) => {
+      const newGroup: Group = {
+        id: crypto.randomUUID(),
+        label: inputValue,
+        categories: [],
+      }
+      setGroups([...groups, newGroup])
+      setInputValue('')
+      setGroupId(newGroup.id)
+    },
+    [groups]
+  )
 
-  const handleGroupDelete = () => {
+  const handleGroupDelete = useCallback(() => {
     const updatedGroups = groups.filter((group) => group.id !== groupId)
     setGroups(updatedGroups)
     setGroupId(updatedGroups[0]?.id || '')
-  }
+  }, [groups, groupId])
 
-  const handleGroupEdit = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const updatedGroups = groups.map((group) =>
-      group.id === groupId ? { ...group, label: e.target.value } : group
-    )
-    setGroups(updatedGroups)
-  }
+  const handleGroupEdit = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      const updatedGroups = groups.map((group) =>
+        group.id === groupId ? { ...group, label: e.target.value } : group
+      )
+      setGroups(updatedGroups)
+    },
+    [groups, groupId]
+  )
 
-  const handleGroupSelect = (id: string) => setGroupId(id)
+  const handleGroupSelect = useCallback((id: string) => setGroupId(id), [])
 
-  const handleCategoryAdd = (inputValue: string, setInputValue: any) => {
-    const newCategory = { id: crypto.randomUUID(), label: inputValue }
-    const updatedGroups = groups.map((group) => {
-      return group.id === groupId
-        ? { ...group, categories: [...group.categories, newCategory] }
-        : group
-    })
-    setGroups(updatedGroups)
-    setInputValue('')
-  }
+  const handleCategoryAdd = useCallback(
+    (inputValue: string, setInputValue: any) => {
+      const newCategory = { id: crypto.randomUUID(), label: inputValue }
+      const updatedGroups = groups.map((group) => {
+        return group.id === groupId
+          ? { ...group, categories: [...group.categories, newCategory] }
+          : group
+      })
+      setGroups(updatedGroups)
+      setInputValue('')
+    },
+    [groups, groupId]
+  )
 
-  const handleCategoryDelete = () => {
+  const handleCategoryDelete = useCallback(() => {
     const updatedGroups = groups.map((group) => {
       return group.id === groupId
         ? {
@@ -82,25 +89,29 @@ export function CategoryManager() {
         : group
     })
     setGroups(updatedGroups)
-  }
+  }, [groups, groupId, categoryId])
 
-  const handleCategoryEdit = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const updatedGroups = groups.map((group) => {
-      return group.id === groupId
-        ? {
-            ...group,
-            categories: group.categories.map((cat) =>
-              cat.id === categoryId ? { ...cat, label: e.target.value } : cat
-            ),
-          }
-        : group
-    })
-    setGroups(updatedGroups)
-  }
+  const handleCategoryEdit = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      const updatedGroups = groups.map((group) => {
+        return group.id === groupId
+          ? {
+              ...group,
+              categories: group.categories.map((cat) =>
+                cat.id === categoryId ? { ...cat, label: e.target.value } : cat
+              ),
+            }
+          : group
+      })
+      setGroups(updatedGroups)
+    },
+    [groups, groupId, categoryId]
+  )
 
-  const handleCategorySelect = (id: string) => setCategoryId(id)
+  const handleCategorySelect = useCallback(
+    (id: string) => setCategoryId(id),
+    []
+  )
 
   return (
     <Stack direction="row" spacing={2}>
