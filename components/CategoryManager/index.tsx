@@ -1,37 +1,24 @@
 'use client'
-import { useState, ChangeEvent, useCallback } from 'react'
+import { useState, ChangeEvent, useCallback, useEffect, useMemo } from 'react'
 import { Stack } from '@mui/material'
 import { EditableList } from '@/components'
 
-interface Category {
-  id: string
-  label: string
-}
-
-interface Group {
-  id: string
-  label: string
-  categories: Category[]
-}
-
-const mockData: Group[] = [1, 2, 3, 4, 5].map((i) => {
-  const categories = [1, 2, 3, 4, 5].map((i) => ({
-    id: crypto.randomUUID(),
-    label: `Category ${i}`,
-  }))
-
-  return {
-    id: crypto.randomUUID(),
-    label: `Group ${i}`,
-    categories: categories,
-  }
-})
+const STORAGE_KEY = 'groups'
 
 export function CategoryManager() {
-  const [groups, setGroups] = useState(mockData)
+  const initialValue: Group[] = useMemo(() => {
+    const storageValue = localStorage.getItem(STORAGE_KEY)
+    return JSON.parse(storageValue ?? '[]')
+  }, [])
+  const [groups, setGroups] = useState(initialValue)
 
   const [groupId, setGroupId] = useState(groups[0]?.id || '')
   const [categoryId, setCategoryId] = useState('')
+
+  useEffect(() => {
+    const storageValue = JSON.stringify(groups)
+    localStorage.setItem(STORAGE_KEY, storageValue)
+  }, [groups])
 
   const handleGroupAdd = useCallback(
     (inputValue: string, setInputValue: any) => {
