@@ -12,40 +12,46 @@ const actions = [
   {
     label: 'Settings',
     icon: <SettingsIcon />,
-    href: '/settings',
+    pathname: '/settings',
   },
   {
     label: 'Expenses',
     icon: <MoneyOffIcon />,
-    href: '/expenses',
+    pathname: '/expenses',
   },
   {
     label: 'Incomes',
     icon: <MoneyIcon />,
-    href: '/incomes',
+    pathname: '/incomes',
   },
   {
     label: 'Capitale',
     icon: <SavingsIcon />,
-    href: '/capitale',
+    pathname: '/capitale',
   },
 ]
 
 export function BottomNavigation() {
-  const [value, setValue] = useState(0)
+  const firstSubpath = new URL(document.URL).pathname.split('/')[1]
+  const [value, setValue] = useState(`/${firstSubpath}`)
   const router = useRouter()
 
   return (
     <MuiBottomNavigation
       showLabels
       value={value}
-      onChange={(_event, newValue) => {
-        router.push(actions[newValue].href)
-        setValue(newValue)
+      onChange={(_event, pathname) => {
+        router.push(pathname)
+        setValue(pathname)
       }}
     >
-      {actions.map(({ label, icon }) => (
-        <BottomNavigationAction key={label} label={label} icon={icon} />
+      {actions.map(({ label, icon, pathname }) => (
+        <BottomNavigationAction
+          key={label}
+          label={label}
+          icon={icon}
+          value={pathname}
+        />
       ))}
     </MuiBottomNavigation>
   )
