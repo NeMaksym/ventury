@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import MuiBottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -32,7 +32,8 @@ const actions = [
 ]
 
 export function BottomNavigation() {
-  const firstSubpath = new URL(document.URL).pathname.split('/')[1]
+  const pathname = usePathname()
+  const firstSubpath = pathname.split('/')[1]
   const [value, setValue] = useState(`/${firstSubpath}`)
   const router = useRouter()
 
