@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { type ChangeEvent, useCallback, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import {
   Stack,
@@ -21,6 +21,7 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import PaymentsIcon from '@mui/icons-material/Payments'
 
+import { YearSelect } from './YearSelect'
 import { AddSourceDialog } from './AddSourceDialog'
 
 const ListStyled = styled(List)<ListProps>(({ theme }) => ({
@@ -57,13 +58,6 @@ const MONTHS = [
   { value: '11', label: 'December' },
 ]
 
-const YEARS = [
-  { value: '2020', label: '2020' },
-  { value: '2021', label: '2021' },
-  { value: '2022', label: '2022' },
-  { value: '2023', label: '2023' },
-]
-
 const SOURCES = [
   { value: crypto.randomUUID(), label: '**** 1234' },
   { value: crypto.randomUUID(), label: '**** 0987' },
@@ -72,14 +66,18 @@ const SOURCES = [
 
 export function ExpensesSidebar() {
   const today = new Date()
-  const m = today.getMonth()
 
   const [mode, setMode] = useState(MODES[0].value)
   const [year, setYear] = useState(today.getFullYear().toString())
   const [month, setMonth] = useState(today.getMonth().toString())
   const [source, setSource] = useState(SOURCES[0].value)
-
   const [openAddSourceDialog, setOpenAddSourceDialog] = useState(false)
+
+  const handleYearChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setYear(e.target.value),
+    []
+  )
 
   return (
     <Stack spacing={2}>
@@ -96,20 +94,7 @@ export function ExpensesSidebar() {
         ))}
       </ToggleButtonGroup>
 
-      <TextField
-        fullWidth
-        id="year"
-        select
-        label="Year"
-        value={year}
-        onChange={(e) => setYear(e.target.value)}
-      >
-        {YEARS.map((yr) => (
-          <MenuItem key={yr.value} value={yr.value}>
-            {yr.label}
-          </MenuItem>
-        ))}
-      </TextField>
+      <YearSelect value={year} onChange={handleYearChange} />
 
       <TextField
         fullWidth
