@@ -3,8 +3,6 @@ import { type ChangeEvent, useCallback, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import {
   Stack,
-  ToggleButton,
-  ToggleButtonGroup,
   List,
   ListProps,
   ListSubheader,
@@ -19,6 +17,7 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import PaymentsIcon from '@mui/icons-material/Payments'
 
+import { ModeToggle, MODES } from './ModeToggle'
 import { YearSelect } from './YearSelect'
 import { MonthSelect } from './MonthSelect'
 import { AddSourceDialog } from './AddSourceDialog'
@@ -37,11 +36,6 @@ const IconButtonStyled = styled(IconButton)<IconButtonProps>(() => ({
   height: '34px',
 }))
 
-const MODES = [
-  { value: 'edit', label: 'Edit' },
-  { value: 'view', label: 'View' },
-]
-
 const SOURCES = [
   { value: crypto.randomUUID(), label: '**** 1234' },
   { value: crypto.randomUUID(), label: '**** 0987' },
@@ -57,6 +51,11 @@ export function ExpensesSidebar() {
   const [source, setSource] = useState(SOURCES[0].value)
   const [openAddSourceDialog, setOpenAddSourceDialog] = useState(false)
 
+  const handleModeChange = useCallback(
+    (_: any, value: string) => setMode(value),
+    []
+  )
+
   const handleYearChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setYear(e.target.value),
@@ -71,21 +70,8 @@ export function ExpensesSidebar() {
 
   return (
     <Stack spacing={2}>
-      <ToggleButtonGroup
-        fullWidth
-        value={mode}
-        exclusive
-        onChange={(_, value) => setMode(value)}
-      >
-        {MODES.map((mode) => (
-          <ToggleButton key={mode.value} value={mode.value}>
-            {mode.label}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-
+      <ModeToggle value={mode} onChange={handleModeChange} />
       <YearSelect value={year} onChange={handleYearChange} />
-
       <MonthSelect value={month} onChange={handleMonthChange} />
 
       <ListStyled
