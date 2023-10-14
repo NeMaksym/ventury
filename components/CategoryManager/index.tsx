@@ -2,12 +2,11 @@
 import { useState, ChangeEvent, useCallback, useEffect, useMemo } from 'react'
 import { Stack } from '@mui/material'
 import { EditableList } from '@/components'
-
-const STORAGE_KEY = 'groups'
+import { STORAGE_KEY } from '@/app/consts'
 
 export function CategoryManager() {
   const initialValue: Group[] = useMemo(() => {
-    const storageValue = localStorage.getItem(STORAGE_KEY)
+    const storageValue = localStorage.getItem(STORAGE_KEY.groups)
     return JSON.parse(storageValue ?? '[]')
   }, [])
   const [groups, setGroups] = useState(initialValue)
@@ -17,7 +16,7 @@ export function CategoryManager() {
 
   useEffect(() => {
     const storageValue = JSON.stringify(groups)
-    localStorage.setItem(STORAGE_KEY, storageValue)
+    localStorage.setItem(STORAGE_KEY.groups, storageValue)
   }, [groups])
 
   const handleGroupAdd = useCallback(
