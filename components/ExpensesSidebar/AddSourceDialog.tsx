@@ -48,13 +48,13 @@ const validationSchema = yup.object({
 interface AddSourceDialogProps {
   open: boolean
   onClose: () => void
-  onApply: (account: Mono_Account | Pb_Account) => void
+  onSubmit: (account: Mono_Account | Pb_Account) => void
 }
 
 export function AddSourceDialog({
   open,
   onClose,
-  onApply,
+  onSubmit,
 }: AddSourceDialogProps) {
   const [accounts, setAccounts] = useState<Mono_Account[]>([])
 
@@ -68,13 +68,13 @@ export function AddSourceDialog({
     onSubmit: (values) => {
       if (values.bank === BANK.PRIVATE) {
         const account = { maskedPan: [`****${values.cardNumber}`] }
-        return onApply(account)
+        return onSubmit(account)
       }
 
       if (values.bank === BANK.MONO) {
         const account = accounts.find((acc) => acc.id === values.accountId)
         if (!account) throw Error('Account ID is missing in accounts list')
-        return onApply(account)
+        return onSubmit(account)
       }
 
       throw Error('Bank is not supported')
@@ -152,7 +152,7 @@ export function AddSourceDialog({
       </DialogContentStyled>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={formik.submitForm}>Apply</Button>
+        <Button onClick={formik.submitForm}>Submit</Button>
       </DialogActions>
     </Dialog>
   )
