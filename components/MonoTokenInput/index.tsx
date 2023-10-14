@@ -1,19 +1,24 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { InputWithButton } from '@/components'
-
-const STORAGE_KEY = 'monoToken'
+import { STORAGE_KEY } from '@/app/consts'
 
 export function MonoTokenInput() {
-  const initialValue = localStorage.getItem(STORAGE_KEY)
+  const [token, setToken] = useState('')
+
+  useEffect(() => {
+    const storageValue = localStorage.getItem(STORAGE_KEY.monoToken)
+    setToken(storageValue ?? '')
+  }, [])
 
   const saveToStorage = (value: string) =>
-    localStorage.setItem(STORAGE_KEY, value)
+    localStorage.setItem(STORAGE_KEY.monoToken, value)
 
   return (
     <InputWithButton
       sx={{ width: '500px' }}
       label="Mono Token"
-      initialValue={initialValue ?? ''}
+      initialValue={token}
       onClick={saveToStorage}
       btnText="Submit"
     />
