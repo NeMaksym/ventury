@@ -40,7 +40,7 @@ const MODES = [
   { value: 'view', label: 'View' },
 ]
 
-const MONTHES = [
+const MONTHS = [
   { value: '0', label: 'January' },
   { value: '1', label: 'February' },
   { value: '2', label: 'March' },
@@ -115,7 +115,7 @@ export function ExpensesSidebar() {
         value={month}
         onChange={(e) => setMonth(e.target.value)}
       >
-        {MONTHES.map((mon) => (
+        {MONTHS.map((mon) => (
           <MenuItem key={mon.value} value={mon.value}>
             {mon.label}
           </MenuItem>
