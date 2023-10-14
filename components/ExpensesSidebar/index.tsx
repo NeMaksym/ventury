@@ -21,6 +21,8 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import PaymentsIcon from '@mui/icons-material/Payments'
 
+import { AddSourceDialog } from './AddSourceDialog'
+
 const ListStyled = styled(List)<ListProps>(({ theme }) => ({
   minWidth: '200px',
   border: 'solid',
@@ -76,6 +78,8 @@ export function ExpensesSidebar() {
   const [year, setYear] = useState(today.getFullYear().toString())
   const [month, setMonth] = useState(today.getMonth().toString())
   const [source, setSource] = useState(SOURCES[0].value)
+
+  const [openAddSourceDialog, setOpenAddSourceDialog] = useState(false)
 
   return (
     <Stack spacing={2}>
@@ -134,7 +138,7 @@ export function ExpensesSidebar() {
               Sources
               <IconButtonStyled
                 size="small"
-                onClick={() => console.log('pump it up!')}
+                onClick={() => setOpenAddSourceDialog(true)}
               >
                 <AddCardIcon />
               </IconButtonStyled>
@@ -156,6 +160,15 @@ export function ExpensesSidebar() {
           </ListItemButton>
         ))}
       </ListStyled>
+
+      <AddSourceDialog
+        open={openAddSourceDialog}
+        onClose={() => setOpenAddSourceDialog(false)}
+        onApply={(account) => {
+          console.log(account)
+          setOpenAddSourceDialog(false)
+        }}
+      />
     </Stack>
   )
 }

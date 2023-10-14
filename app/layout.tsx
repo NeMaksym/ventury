@@ -1,8 +1,12 @@
+'use client'
+import axios from 'axios'
+import { useEffect } from 'react'
 import { Roboto } from 'next/font/google'
 import { BottomNavigation } from '@/components'
 import CssBaseline from '@mui/material/CssBaseline'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
+import { STORAGE_KEY } from '@/app/consts'
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -15,6 +19,33 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  useEffect(() => {
+    const token = localStorage.getItem(STORAGE_KEY.monoToken)
+    if (!token) return
+
+    const value = localStorage.getItem(STORAGE_KEY.accounts)
+    const updatedAt = localStorage.getItem(STORAGE_KEY.updatedAt)
+    if (value && updatedAt) {
+      const timeSinceUpdate =
+        new Date(updatedAt).valueOf() - new Date().valueOf()
+      if (timeSinceUpdate < 60 * 1000) return
+    }
+
+    const url = 'https://api.monobank.ua/personal/client-info'
+    const headers = { 'X-Token': token }
+    axios
+      .get(url, { headers })
+      .then((res: { data: Mono_Client }) => res.data.accounts)
+      .then((accounts) =>
+        accounts.filter(({ type }) => type !== 'eAid' && type !== 'fop')
+      )
+      .then((accounts) => {
+        const value = JSON.stringify(accounts)
+        localStorage.setItem(STORAGE_KEY.accounts, value)
+        localStorage.setItem(STORAGE_KEY.updatedAt, new Date().toUTCString())
+      })
+  }, [])
+
   return (
     <html lang="en">
       <body className={roboto.className}>
