@@ -5,8 +5,6 @@ import {
   Stack,
   ToggleButton,
   ToggleButtonGroup,
-  MenuItem,
-  TextField,
   List,
   ListProps,
   ListSubheader,
@@ -22,6 +20,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard'
 import PaymentsIcon from '@mui/icons-material/Payments'
 
 import { YearSelect } from './YearSelect'
+import { MonthSelect } from './MonthSelect'
 import { AddSourceDialog } from './AddSourceDialog'
 
 const ListStyled = styled(List)<ListProps>(({ theme }) => ({
@@ -41,21 +40,6 @@ const IconButtonStyled = styled(IconButton)<IconButtonProps>(() => ({
 const MODES = [
   { value: 'edit', label: 'Edit' },
   { value: 'view', label: 'View' },
-]
-
-const MONTHS = [
-  { value: '0', label: 'January' },
-  { value: '1', label: 'February' },
-  { value: '2', label: 'March' },
-  { value: '3', label: 'April' },
-  { value: '4', label: 'May' },
-  { value: '5', label: 'June' },
-  { value: '6', label: 'July' },
-  { value: '7', label: 'August' },
-  { value: '8', label: 'September' },
-  { value: '9', label: 'October' },
-  { value: '10', label: 'November' },
-  { value: '11', label: 'December' },
 ]
 
 const SOURCES = [
@@ -79,6 +63,12 @@ export function ExpensesSidebar() {
     []
   )
 
+  const handleMonthChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setMonth(e.target.value),
+    []
+  )
+
   return (
     <Stack spacing={2}>
       <ToggleButtonGroup
@@ -96,20 +86,7 @@ export function ExpensesSidebar() {
 
       <YearSelect value={year} onChange={handleYearChange} />
 
-      <TextField
-        fullWidth
-        id="month"
-        select
-        label="Month"
-        value={month}
-        onChange={(e) => setMonth(e.target.value)}
-      >
-        {MONTHS.map((mon) => (
-          <MenuItem key={mon.value} value={mon.value}>
-            {mon.label}
-          </MenuItem>
-        ))}
-      </TextField>
+      <MonthSelect value={month} onChange={handleMonthChange} />
 
       <ListStyled
         disablePadding
