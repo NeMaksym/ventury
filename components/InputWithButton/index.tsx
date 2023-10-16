@@ -32,7 +32,7 @@ export function InputWithButton({
   size,
   disabled,
 }: InputWithButtonProps) {
-  const INPUT_ID = crypto.randomUUID()
+  // TODO: Use external state
   const [value, setValue] = useState(initialValue ?? '')
 
   const captureValue = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,10 +48,9 @@ export function InputWithButton({
       variant="outlined"
       disabled={disabled}
     >
-      {label && <InputLabel htmlFor={INPUT_ID}>{label}</InputLabel>}
+      {label && <InputLabel>{label}</InputLabel>}
       <OutlinedInput
         size={size}
-        id={INPUT_ID}
         type="text"
         value={value}
         onChange={captureValue}
