@@ -1,23 +1,13 @@
 'use client'
-import { useState, ChangeEvent, useCallback, useEffect, useMemo } from 'react'
+import { useState, ChangeEvent, useCallback } from 'react'
 import { Stack } from '@mui/material'
 import { EditableList } from '@/components'
-import { STORAGE_KEY } from '@/app/consts'
+import { useGroups } from '@/hooks'
 
 export function CategoryManager() {
-  const initialValue: Group[] = useMemo(() => {
-    const storageValue = localStorage.getItem(STORAGE_KEY.groups)
-    return JSON.parse(storageValue ?? '[]')
-  }, [])
-  const [groups, setGroups] = useState(initialValue)
-
-  const [groupId, setGroupId] = useState(groups[0]?.id || '')
+  const [groups, setGroups] = useGroups()
+  const [groupId, setGroupId] = useState('')
   const [categoryId, setCategoryId] = useState('')
-
-  useEffect(() => {
-    const storageValue = JSON.stringify(groups)
-    localStorage.setItem(STORAGE_KEY.groups, storageValue)
-  }, [groups])
 
   const handleGroupAdd = useCallback(
     (inputValue: string, setInputValue: any) => {
@@ -30,14 +20,14 @@ export function CategoryManager() {
       setInputValue('')
       setGroupId(newGroup.id)
     },
-    [groups]
+    [groups, setGroups]
   )
 
   const handleGroupDelete = useCallback(() => {
     const updatedGroups = groups.filter((group) => group.id !== groupId)
     setGroups(updatedGroups)
     setGroupId(updatedGroups[0]?.id || '')
-  }, [groups, groupId])
+  }, [groups, groupId, setGroups])
 
   const handleGroupEdit = useCallback(
     (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -46,7 +36,7 @@ export function CategoryManager() {
       )
       setGroups(updatedGroups)
     },
-    [groups, groupId]
+    [groups, groupId, setGroups]
   )
 
   const handleGroupSelect = useCallback((id: string) => setGroupId(id), [])
@@ -62,7 +52,7 @@ export function CategoryManager() {
       setGroups(updatedGroups)
       setInputValue('')
     },
-    [groups, groupId]
+    [groups, groupId, setGroups]
   )
 
   const handleCategoryDelete = useCallback(() => {
@@ -75,7 +65,7 @@ export function CategoryManager() {
         : group
     })
     setGroups(updatedGroups)
-  }, [groups, groupId, categoryId])
+  }, [groups, groupId, categoryId, setGroups])
 
   const handleCategoryEdit = useCallback(
     (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -91,7 +81,7 @@ export function CategoryManager() {
       })
       setGroups(updatedGroups)
     },
-    [groups, groupId, categoryId]
+    [groups, groupId, categoryId, setGroups]
   )
 
   const handleCategorySelect = useCallback(
