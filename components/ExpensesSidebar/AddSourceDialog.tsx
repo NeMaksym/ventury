@@ -83,7 +83,9 @@ export function AddSourceDialog({
 
   useEffect(() => {
     const storageValue = localStorage.getItem(STORAGE_KEY.accounts)
-    const accounts: Mono_Account[] = JSON.parse(storageValue ?? '[]')
+    const accounts: Mono_Account[] = storageValue
+      ? JSON.parse(storageValue)
+      : []
     setAccounts(accounts)
     formik.setFieldValue('accountId', accounts[0]?.id ?? '')
 
