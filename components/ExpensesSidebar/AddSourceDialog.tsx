@@ -86,6 +86,8 @@ export function AddSourceDialog({
     const accounts: Mono_Account[] = JSON.parse(storageValue ?? '[]')
     setAccounts(accounts)
     formik.setFieldValue('accountId', accounts[0]?.id ?? '')
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- must be executed once unconditionally
   }, [])
 
   return (
